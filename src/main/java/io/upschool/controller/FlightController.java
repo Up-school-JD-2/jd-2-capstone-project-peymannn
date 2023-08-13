@@ -30,7 +30,7 @@ public class FlightController {
         var flightSaveResponse = flightServiceImpl.save(request);
         List<FlightSaveResponse> flightSaveResponseList = getFlightSaveResponseList(flightSaveResponse);
 
-        var response = BaseResponse.<FlightSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(flightSaveResponseList).successMessage("data created.").build();
+        var response = BaseResponse.<FlightSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(flightSaveResponseList).successMessage("The new flight has been identified.").build();
         return ResponseEntity.ok(response);
     }
 

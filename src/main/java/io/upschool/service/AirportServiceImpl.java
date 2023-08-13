@@ -36,14 +36,6 @@ public class AirportServiceImpl implements AirportService {
         return getAirportSaveResponse(savedAirport);
     }
 
-    private static Airport getAirport(AirportSaveRequest request) {
-        return Airport.builder().airportName(request.getAirportName()).address(request.getAddress()).build();
-    }
-
-    private static AirportSaveResponse getAirportSaveResponse(Airport savedAirport) {
-        return AirportSaveResponse.builder().airportName(savedAirport.getAirportName()).address(savedAirport.getAddress()).build();
-    }
-
     @Override
     public List<AirportSaveResponse> searchAirportsByLocation(String location) {
         var filteredAirports = airportRepository.findAllByAddress(location);
@@ -56,9 +48,24 @@ public class AirportServiceImpl implements AirportService {
         return airportRepository.getReferenceById(id);
     }
 
+    @Override
     public void deleteById(Long id) {
         var airport = airportRepository.findById(id).orElseThrow(() -> new BusinessException(AirlineSystemConstant.DATA_NOT_FOUND));
         airport.setIsActive(false);
         airportRepository.save(airport);
+    }
+
+    private static Airport getAirport(AirportSaveRequest request) {
+        return Airport.builder()
+                .airportName(request.getAirportName())
+                .address(request.getAddress())
+                .build();
+    }
+
+    private static AirportSaveResponse getAirportSaveResponse(Airport savedAirport) {
+        return AirportSaveResponse.builder()
+                .airportName(savedAirport.getAirportName())
+                .address(savedAirport.getAddress())
+                .build();
     }
 }

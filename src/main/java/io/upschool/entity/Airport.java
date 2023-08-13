@@ -1,6 +1,7 @@
 package io.upschool.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,11 +21,11 @@ public class Airport {
     private Long id;
 
     @Column(nullable = false)
-    @NotNull
+    @NotBlank(message = "airport name may not be blank")
     private String airportName ;
 
     @Column(nullable = false)
-    @NotNull
+    @NotBlank(message = "address may not be blank")
     private String address ;
 
     @Builder.Default

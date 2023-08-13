@@ -1,7 +1,7 @@
 package io.upschool.service;
 
-import io.upschool.Validation.CardValidation;
-import io.upschool.Validation.PhoneValidation;
+import io.upschool.Validation.CardValidationImpl;
+import io.upschool.Validation.PhoneValidationImpl;
 import io.upschool.dto.request.TicketSaveRequest;
 import io.upschool.dto.response.TicketSaveResponse;
 import io.upschool.entity.Flight;
@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -35,21 +34,15 @@ public class TicketServiceImpl implements TicketService {
     @Transactional
     @Override
     public TicketSaveResponse save(TicketSaveRequest request) {
-        Flight flight = flightService.getReferenceById(request.getFlightId());
 
         var cardNumberWithOnlyDigit = convertCardNumberWithOnlyDigit(request.getCardNumber());
         CheckValidations(request, cardNumberWithOnlyDigit);
+
+        Flight flight = flightService.getReferenceById(request.getFlightId());
         String formattedCardNumber = maskCardNumber(cardNumberWithOnlyDigit, AirlineSystemConstant.MASKED_CARD_FORMAT);
         Ticket ticket = getTicket(request, flight, formattedCardNumber);
         Ticket savedTicket = ticketRepository.save(ticket);
         return getTicketSaveResponse(savedTicket);
-    }
-
-    private static void CheckValidations(TicketSaveRequest request, String cardNumberWithOnlyDigit) {
-        if (PhoneValidation.IsNotValid(request.getPassengerPhoneNumber()))
-            throw new BusinessException(AirlineSystemConstant.INVALID_PHONE_EXCEPTION);
-        if (CardValidation.IsNotValid(cardNumberWithOnlyDigit))
-            throw new BusinessException(AirlineSystemConstant.INVALID_CARD_NUMBER_EXCEPTION);
     }
 
     @Override
@@ -62,7 +55,6 @@ public class TicketServiceImpl implements TicketService {
     @Override
     public TicketSaveResponse getTicketByTicketNumber(String ticketNumber) {
         Ticket ticket = ticketRepository.findByTicketNumberContainingIgnoreCase(ticketNumber).orElseThrow(() -> new BusinessException(AirlineSystemConstant.DATA_NOT_FOUND));
-        ;
         return getTicketSaveResponse(ticket);
     }
 
@@ -80,11 +72,32 @@ public class TicketServiceImpl implements TicketService {
     }
 
     private static Ticket getTicket(TicketSaveRequest request, Flight flight, String formattedCardNumber) {
-        return Ticket.builder().flight(flight).passengerNameSurname(request.getPassengerNameSurname()).passengerPhoneNumber(request.getPassengerPhoneNumber()).CardNumber(formattedCardNumber).build();
+        return Ticket.builder()
+                .flight(flight)
+                .passengerNameSurname(request.getPassengerNameSurname())
+                .passengerPhoneNumber(request.getPassengerPhoneNumber())
+                .CardNumber(formattedCardNumber)
+                .build();
     }
 
     private static TicketSaveResponse getTicketSaveResponse(Ticket ticket) {
-        return TicketSaveResponse.builder().ticketNumber(ticket.getTicketNumber()).passengerNameSurname(ticket.getPassengerNameSurname()).CardNumber(ticket.getCardNumber()).destinationPlace(ticket.getFlight().getRoute().getDestinationPlace().getAirportName() + " - " + ticket.getFlight().getRoute().getDestinationPlace().getAddress()).departurePlace(ticket.getFlight().getRoute().getDeparturePlace().getAirportName() + " - " + ticket.getFlight().getRoute().getDeparturePlace().getAddress()).price(ticket.getFlight().getPrice()).flightDate(ticket.getFlight().getFlightDate()).AirlineCompanyName(ticket.getFlight().getAirlineCompany().getName()).build();
+        return TicketSaveResponse.builder()
+                .ticketNumber(ticket.getTicketNumber())
+                .passengerNameSurname(ticket.getPassengerNameSurname())
+                .CardNumber(ticket.getCardNumber())
+                .destinationPlace(ticket.getFlight().getRoute().getDestinationPlace().getAirportName() + " - " + ticket.getFlight().getRoute().getDestinationPlace().getAddress())
+                .departurePlace(ticket.getFlight().getRoute().getDeparturePlace().getAirportName() + " - " + ticket.getFlight().getRoute().getDeparturePlace().getAddress())
+                .price(ticket.getFlight().getPrice())
+                .flightDate(ticket.getFlight().getFlightDate())
+                .airlineCompanyName(ticket.getFlight().getAirlineCompany().getName())
+                .build();
+    }
+
+    private static void CheckValidations(TicketSaveRequest request, String cardNumberWithOnlyDigit) {
+        if (!PhoneValidationImpl.isValid(request.getPassengerPhoneNumber()))
+            throw new BusinessException(AirlineSystemConstant.INVALID_PHONE_EXCEPTION);
+        if (!CardValidationImpl.isValid(cardNumberWithOnlyDigit))
+            throw new BusinessException(AirlineSystemConstant.INVALID_CARD_NUMBER_EXCEPTION);
     }
 
     private static String maskCardNumber(String cardNumber, String mask) {

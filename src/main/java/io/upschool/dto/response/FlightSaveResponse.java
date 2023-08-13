@@ -18,5 +18,5 @@ public class FlightSaveResponse {
     private double price;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date flightDate;
-    private String AirlineCompanyName;
+    private String airlineCompanyName;
 }

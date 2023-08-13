@@ -30,7 +30,7 @@ public class AirportController {
         var airportSaveResponse = airportServiceImpl.save(request);
         List<AirportSaveResponse> airportSaveResponseList = getAirportSaveResponseList(airportSaveResponse);
 
-        var response = BaseResponse.<AirportSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(airportSaveResponseList).successMessage("data created.").build();
+        var response = BaseResponse.<AirportSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(airportSaveResponseList).successMessage("The new airport has been identified.").build();
         return ResponseEntity.ok(response);
     }
 

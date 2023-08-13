@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class AirlineCompanySaveResponse {
+
     private String name;
 
     private String email;

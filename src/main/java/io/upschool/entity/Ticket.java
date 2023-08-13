@@ -3,6 +3,9 @@ package io.upschool.entity;
 
 import io.upschool.utils.AirlineSystemConstant;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Digits;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,16 +32,17 @@ public class Ticket {
     private String ticketNumber  = UUID.randomUUID().toString();
 
     @Column(nullable = false)
-    @NotNull
+    @NotBlank(message = "passenger Name Surname may not be blank")
     private String passengerNameSurname;
 
     @Column(nullable = false)
-    @NotNull
+    @NotBlank(message = "passenger Phone Number may not be blank")
+    @Digits(fraction = 0, integer = 10, message = "enter a value between 0-10 the numbers.")
     private String passengerPhoneNumber;
 
     @Column(nullable = false)
     @Size(min = AirlineSystemConstant.CARD_NUMBER_LENGTH, max = AirlineSystemConstant.CARD_NUMBER_LENGTH)
-    @NotNull
+    @NotBlank(message = "Card Number may not be blank")
     private String CardNumber ;
 
     @Builder.Default

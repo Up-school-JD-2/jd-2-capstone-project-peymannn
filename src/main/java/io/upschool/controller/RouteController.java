@@ -30,7 +30,7 @@ public class RouteController {
         var routeSaveResponse = routeServiceImpl.save(request);
         List<RouteSaveResponse> routeSaveResponseList = getRouteSaveResponseList(routeSaveResponse);
 
-        var response = BaseResponse.<RouteSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(routeSaveResponseList).successMessage("data created.").build();
+        var response = BaseResponse.<RouteSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(routeSaveResponseList).successMessage("route created.").build();
         return ResponseEntity.ok(response);
     }
 

@@ -31,7 +31,7 @@ public class TicketController {
         var ticketSaveResponse = ticketServiceImpl.save(request);
         List<TicketSaveResponse> ticketSaveResponseList = getTicketSaveResponseList(ticketSaveResponse);
 
-        var response = BaseResponse.<TicketSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(ticketSaveResponseList).successMessage("data created.").build();
+        var response = BaseResponse.<TicketSaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(ticketSaveResponseList).successMessage("ticket purchase completed.").build();
         return ResponseEntity.ok(response);
     }
 

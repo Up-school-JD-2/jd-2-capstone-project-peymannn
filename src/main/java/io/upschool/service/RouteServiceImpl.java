@@ -1,6 +1,6 @@
 package io.upschool.service;
 
-import io.upschool.Validation.RouteValidation;
+import io.upschool.Validation.RouteValidationImpl;
 import io.upschool.dto.request.RouteSaveRequest;
 import io.upschool.dto.response.RouteSaveResponse;
 import io.upschool.entity.Airport;
@@ -33,6 +33,7 @@ public class RouteServiceImpl implements RouteService {
     @Override
     public RouteSaveResponse save(RouteSaveRequest request) {
         CheckValidations(request.getDeparturePlaceId(), request.getDestinationPlaceId());
+
         Airport departureAirport = airportService.getReferenceById(request.getDeparturePlaceId());
         Airport destinationAirport = airportService.getReferenceById(request.getDestinationPlaceId());
 
@@ -53,6 +54,7 @@ public class RouteServiceImpl implements RouteService {
         return routeRepository.getReferenceById(id);
     }
 
+    @Override
     public void deleteById(Long id) {
         var route = routeRepository.findById(id).get();
         route.setIsActive(false);
@@ -60,16 +62,21 @@ public class RouteServiceImpl implements RouteService {
     }
 
     private static RouteSaveResponse getRouteSaveResponse(Route savedRoute) {
-        return RouteSaveResponse.builder().destinationPlace(savedRoute.getDestinationPlace().getAirportName() + " - " + savedRoute.getDestinationPlace().getAddress()).departurePlace(savedRoute.getDeparturePlace().getAirportName() + " - " + savedRoute.getDeparturePlace().getAddress()).build();
+        return RouteSaveResponse.builder()
+                .destinationPlace(savedRoute.getDestinationPlace().getAirportName() + " - " + savedRoute.getDestinationPlace().getAddress())
+                .departurePlace(savedRoute.getDeparturePlace().getAirportName() + " - " + savedRoute.getDeparturePlace().getAddress())
+                .build();
     }
 
     private static Route getRoute(Airport departureAirport, Airport destinationAirport) {
-        return Route.builder().departurePlace(departureAirport).destinationPlace(destinationAirport).build();
+        return Route.builder()
+                .departurePlace(departureAirport)
+                .destinationPlace(destinationAirport)
+                .build();
     }
 
     private static void CheckValidations(Long departurePlaceId, Long destinationPlaceId) {
-        if (RouteValidation.IsNotValid(departurePlaceId, destinationPlaceId))
+        if (!RouteValidationImpl.isValid(departurePlaceId, destinationPlaceId))
             throw new BusinessException(AirlineSystemConstant.INVALID_AIRLINE_ROUTE_EXCEPTION);
-
     }
 }

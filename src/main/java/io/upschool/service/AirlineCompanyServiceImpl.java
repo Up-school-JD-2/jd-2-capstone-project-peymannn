@@ -1,11 +1,8 @@
 package io.upschool.service;
 
-import io.upschool.Validation.CardValidation;
-import io.upschool.Validation.EmailValidation;
-import io.upschool.Validation.PhoneValidation;
+import io.upschool.Validation.EmailValidationImpl;
 import io.upschool.dto.request.AirlineCompanySaveRequest;
 import io.upschool.dto.response.AirlineCompanySaveResponse;
-import io.upschool.dto.response.AirportSaveResponse;
 import io.upschool.entity.AirlineCompany;
 import io.upschool.exception.BusinessException;
 import io.upschool.repository.AirlineCompanyRepository;
@@ -15,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,22 +31,9 @@ public class AirlineCompanyServiceImpl implements AirlineCompanyService {
     @Override
     public AirlineCompanySaveResponse save(AirlineCompanySaveRequest request) {
         CheckValidations(request);
-        AirlineCompany airport = getAirport(request);
+        AirlineCompany airport = getAirlineCompany(request);
         AirlineCompany savedAirport = airlineCompanyRepository.save(airport);
         return getAirlineCompanySaveResponse(savedAirport);
-    }
-
-    private static void CheckValidations(AirlineCompanySaveRequest request) {
-        if (EmailValidation.IsNotValid(request.getEmail()))
-            throw new BusinessException(AirlineSystemConstant.INVALID_EMAIL_EXCEPTION);
-    }
-
-    private static AirlineCompany getAirport(AirlineCompanySaveRequest request) {
-        return AirlineCompany
-                .builder()
-                .name(request.getName())
-                .email(request.getEmail())
-                .build();
     }
 
     @Override
@@ -60,6 +43,26 @@ public class AirlineCompanyServiceImpl implements AirlineCompanyService {
         return list;
     }
 
+    @Override
+    public AirlineCompany getReferenceById(Long id) {
+        return airlineCompanyRepository.getReferenceById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        var airlineCompany = airlineCompanyRepository.findById(id).orElseThrow(() -> new BusinessException(AirlineSystemConstant.DATA_NOT_FOUND));
+        airlineCompany.setIsActive(false);
+        airlineCompanyRepository.save(airlineCompany);
+    }
+
+    private static AirlineCompany getAirlineCompany(AirlineCompanySaveRequest request) {
+        return AirlineCompany
+                .builder()
+                .name(request.getName())
+                .email(request.getEmail())
+                .build();
+    }
+
     private static AirlineCompanySaveResponse getAirlineCompanySaveResponse(AirlineCompany airlineCompany) {
         return AirlineCompanySaveResponse.builder()
                 .name(airlineCompany.getName())
@@ -67,14 +70,10 @@ public class AirlineCompanyServiceImpl implements AirlineCompanyService {
                 .build();
     }
 
-    @Override
-    public AirlineCompany getReferenceById(Long id) {
-        return airlineCompanyRepository.getReferenceById(id);
+    private static void CheckValidations(AirlineCompanySaveRequest request) {
+        if (!EmailValidationImpl.isValid(request.getEmail()))
+            throw new BusinessException(AirlineSystemConstant.INVALID_EMAIL_EXCEPTION);
     }
 
-    public void deleteById(Long id) {
-        var airlineCompany = airlineCompanyRepository.findById(id).orElseThrow(() -> new BusinessException(AirlineSystemConstant.DATA_NOT_FOUND));
-        airlineCompany.setIsActive(false);
-        airlineCompanyRepository.save(airlineCompany);
-    }
+
 }

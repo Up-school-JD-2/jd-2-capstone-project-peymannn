@@ -30,7 +30,7 @@ public class AirlineCompanyController {
         var airlineCompanySaveResponse = airlineCompanyServiceImpl.save(request);
         List<AirlineCompanySaveResponse> airlineCompanySaveResponseList = getAirlineCompanySaveResponseList(airlineCompanySaveResponse);
 
-        var response = BaseResponse.<AirlineCompanySaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(airlineCompanySaveResponseList).successMessage("data created.").build();
+        var response = BaseResponse.<AirlineCompanySaveResponse>builder().status(HttpStatus.CREATED.value()).isSuccess(true).dataList(airlineCompanySaveResponseList).successMessage("The new airline company has been identified.").build();
         return ResponseEntity.ok(response);
     }
 

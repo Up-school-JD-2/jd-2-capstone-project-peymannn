@@ -13,13 +13,21 @@ import java.util.Date;
 @NoArgsConstructor
 @Builder
 public class TicketSaveResponse {
+
     private String departurePlace;
+
     private String destinationPlace;
+
     private double price;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private Date flightDate;
-    private String AirlineCompanyName;
+
+    private String airlineCompanyName;
+
     private String ticketNumber;
+
     private String passengerNameSurname;
+
     private String CardNumber;
 }
