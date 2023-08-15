@@ -37,6 +37,12 @@ public class FlightServiceImpl implements FlightService {
     }
 
     @Override
+    public List<FlightSaveResponse> searchFlightsByTwoAddressAndAirlineCompany(String to, String from, Long id) {
+        var allFlight = flightRepository.findAllByRouteDestinationPlaceAddressAndRouteDeparturePlaceAddressAndAirlineCompanyId(to, from, id);
+        List<FlightSaveResponse> list = allFlight.stream().map(flight -> getFlightSaveResponse(flight)).toList();
+        return list;
+    }
+    @Override
     public Flight getReferenceById(Long id) {
         return flightRepository.getReferenceById(id);
     }

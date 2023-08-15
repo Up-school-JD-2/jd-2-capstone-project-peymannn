@@ -26,7 +26,7 @@ public class TicketSaveRequest {
     @Digits(fraction = 0, integer = 10, message = "enter a value between 0-10 the numbers.")
     private String passengerPhoneNumber;
 
-    @Size(min = AirlineSystemConstant.CARD_NUMBER_LENGTH, max = AirlineSystemConstant.CARD_NUMBER_LENGTH)
+    @Size(min = AirlineSystemConstant.CARD_NUMBER_LENGTH)
     @NotBlank(message = "Card Number may not be blank")
     private String CardNumber;
 }

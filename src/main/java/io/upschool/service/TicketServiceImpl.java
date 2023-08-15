@@ -7,6 +7,8 @@ import io.upschool.dto.response.TicketSaveResponse;
 import io.upschool.entity.Flight;
 import io.upschool.entity.Ticket;
 import io.upschool.exception.BusinessException;
+import io.upschool.exception.CardNotValidException;
+import io.upschool.exception.PhoneNotValidException;
 import io.upschool.repository.TicketRepository;
 import io.upschool.service.Interface.FlightService;
 import io.upschool.service.Interface.TicketService;
@@ -95,9 +97,9 @@ public class TicketServiceImpl implements TicketService {
 
     private static void CheckValidations(TicketSaveRequest request, String cardNumberWithOnlyDigit) {
         if (!PhoneValidationImpl.isValid(request.getPassengerPhoneNumber()))
-            throw new BusinessException(AirlineSystemConstant.INVALID_PHONE_EXCEPTION);
+            throw new PhoneNotValidException(AirlineSystemConstant.INVALID_PHONE_EXCEPTION);
         if (!CardValidationImpl.isValid(cardNumberWithOnlyDigit))
-            throw new BusinessException(AirlineSystemConstant.INVALID_CARD_NUMBER_EXCEPTION);
+            throw new CardNotValidException(AirlineSystemConstant.INVALID_CARD_NUMBER_EXCEPTION);
     }
 
     private static String maskCardNumber(String cardNumber, String mask) {

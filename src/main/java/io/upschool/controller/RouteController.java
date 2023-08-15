@@ -4,6 +4,7 @@ import io.upschool.dto.BaseResponse;
 import io.upschool.dto.request.RouteSaveRequest;
 import io.upschool.dto.response.RouteSaveResponse;
 import io.upschool.service.RouteServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class RouteController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/route")
-    public ResponseEntity<Object> createRoute(@RequestBody RouteSaveRequest request) {
+    @PostMapping()
+    public ResponseEntity<Object> createRoute(@Valid @RequestBody RouteSaveRequest request) {
         var routeSaveResponse = routeServiceImpl.save(request);
         List<RouteSaveResponse> routeSaveResponseList = getRouteSaveResponseList(routeSaveResponse);
 
@@ -34,13 +35,7 @@ public class RouteController {
         return ResponseEntity.ok(response);
     }
 
-    private static List<RouteSaveResponse> getRouteSaveResponseList(RouteSaveResponse routeSaveResponse) {
-        List<RouteSaveResponse> routeSaveResponseList = new ArrayList<>();
-        routeSaveResponseList.add(routeSaveResponse);
-        return routeSaveResponseList;
-    }
-
-    @GetMapping("/search")
+    @GetMapping("/searchByLocation")
     public ResponseEntity<Object> findRoutesByLocationQuery(@RequestParam("to") String to, @RequestParam("from") String from) {
         var route = routeServiceImpl.searchRoutesByLocation(to, from);
         var response = BaseResponse.<RouteSaveResponse>builder().status(HttpStatus.OK.value()).isSuccess(true).dataList(route).build();
@@ -50,5 +45,11 @@ public class RouteController {
     @DeleteMapping("/{id}")
     public void deleteRoute(@PathVariable("id") Long id) {
         routeServiceImpl.deleteById(id);
+    }
+
+    private static List<RouteSaveResponse> getRouteSaveResponseList(RouteSaveResponse routeSaveResponse) {
+        List<RouteSaveResponse> routeSaveResponseList = new ArrayList<>();
+        routeSaveResponseList.add(routeSaveResponse);
+        return routeSaveResponseList;
     }
 }

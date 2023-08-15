@@ -6,6 +6,7 @@ import io.upschool.dto.response.RouteSaveResponse;
 import io.upschool.entity.Airport;
 import io.upschool.entity.Route;
 import io.upschool.exception.BusinessException;
+import io.upschool.exception.RouteNotValidException;
 import io.upschool.repository.RouteRepository;
 import io.upschool.service.Interface.AirportService;
 import io.upschool.service.Interface.RouteService;
@@ -77,6 +78,6 @@ public class RouteServiceImpl implements RouteService {
 
     private static void CheckValidations(Long departurePlaceId, Long destinationPlaceId) {
         if (!RouteValidationImpl.isValid(departurePlaceId, destinationPlaceId))
-            throw new BusinessException(AirlineSystemConstant.INVALID_AIRLINE_ROUTE_EXCEPTION);
+            throw new RouteNotValidException(AirlineSystemConstant.INVALID_AIRLINE_ROUTE_EXCEPTION);
     }
 }

@@ -5,6 +5,7 @@ import io.upschool.dto.request.AirlineCompanySaveRequest;
 import io.upschool.dto.response.AirlineCompanySaveResponse;
 import io.upschool.entity.AirlineCompany;
 import io.upschool.exception.BusinessException;
+import io.upschool.exception.EmailNotValidException;
 import io.upschool.repository.AirlineCompanyRepository;
 import io.upschool.service.Interface.AirlineCompanyService;
 import io.upschool.utils.AirlineSystemConstant;
@@ -37,7 +38,7 @@ public class AirlineCompanyServiceImpl implements AirlineCompanyService {
     }
 
     @Override
-    public List<AirlineCompanySaveResponse> searchAirlineCompanysByName(String name) {
+    public List<AirlineCompanySaveResponse> searchAirlineCompaniesByName(String name) {
         var filteredAirlineCompany = airlineCompanyRepository.findAirlineCompaniesByNameContainingIgnoreCase(name);
         List<AirlineCompanySaveResponse> list = filteredAirlineCompany.stream().map(airlineCompany -> getAirlineCompanySaveResponse(airlineCompany)).toList();
         return list;
@@ -72,7 +73,7 @@ public class AirlineCompanyServiceImpl implements AirlineCompanyService {
 
     private static void CheckValidations(AirlineCompanySaveRequest request) {
         if (!EmailValidationImpl.isValid(request.getEmail()))
-            throw new BusinessException(AirlineSystemConstant.INVALID_EMAIL_EXCEPTION);
+            throw new EmailNotValidException(AirlineSystemConstant.INVALID_EMAIL_EXCEPTION);
     }
 
 

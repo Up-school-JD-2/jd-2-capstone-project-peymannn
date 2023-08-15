@@ -4,6 +4,7 @@ import io.upschool.dto.BaseResponse;
 import io.upschool.dto.request.FlightSaveRequest;
 import io.upschool.dto.response.FlightSaveResponse;
 import io.upschool.service.FlightServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class FlightController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/flight")
-    public ResponseEntity<Object> createFlight(@RequestBody FlightSaveRequest request) {
+    @PostMapping()
+    public ResponseEntity<Object> createFlight(@Valid @RequestBody FlightSaveRequest request) {
         var flightSaveResponse = flightServiceImpl.save(request);
         List<FlightSaveResponse> flightSaveResponseList = getFlightSaveResponseList(flightSaveResponse);
 
@@ -34,14 +35,8 @@ public class FlightController {
         return ResponseEntity.ok(response);
     }
 
-    private static List<FlightSaveResponse> getFlightSaveResponseList(FlightSaveResponse flightSaveResponse) {
-        List<FlightSaveResponse> flightSaveResponseList = new ArrayList<>();
-        flightSaveResponseList.add(flightSaveResponse);
-        return flightSaveResponseList;
-    }
-
     @GetMapping("/searchWithAirlineCompanyName/{airlineCompanyName}")
-    public ResponseEntity<Object> findFlightsByLocationQuery(@PathVariable("airlineCompanyName") String query) {
+    public ResponseEntity<Object> findFlightsByAirlineCompanyName(@PathVariable("airlineCompanyName") String query) {
         var flightSaveResponseList = flightServiceImpl.searchFlightsByAirlineCompanyName(query);
         var response = BaseResponse.<FlightSaveResponse>builder().status(HttpStatus.OK.value()).isSuccess(true).dataList(flightSaveResponseList).build();
         return ResponseEntity.ok(response);
@@ -54,4 +49,9 @@ public class FlightController {
         return ResponseEntity.ok(response);
     }
 
+    static List<FlightSaveResponse> getFlightSaveResponseList(FlightSaveResponse flightSaveResponse) {
+        List<FlightSaveResponse> flightSaveResponseList = new ArrayList<>();
+        flightSaveResponseList.add(flightSaveResponse);
+        return flightSaveResponseList;
+    }
 }

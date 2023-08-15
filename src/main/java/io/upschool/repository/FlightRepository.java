@@ -12,5 +12,7 @@ public interface FlightRepository extends JpaRepository<Flight, Long> {
 
     List<Flight> findAllByRouteDestinationPlaceAddressAndRouteDeparturePlaceAddress(String to, String from);
 
+    List<Flight> findAllByRouteDestinationPlaceAddressAndRouteDeparturePlaceAddressAndAirlineCompanyId(String to, String from, Long id);
+
 
 }

@@ -4,6 +4,7 @@ import io.upschool.dto.BaseResponse;
 import io.upschool.dto.request.AirportSaveRequest;
 import io.upschool.dto.response.AirportSaveResponse;
 import io.upschool.service.AirportServiceImpl;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,8 +26,8 @@ public class AirportController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/airport")
-    public ResponseEntity<Object> createAirport(@RequestBody AirportSaveRequest request) {
+    @PostMapping()
+    public ResponseEntity<Object> createAirport(@Valid @RequestBody AirportSaveRequest request) {
         var airportSaveResponse = airportServiceImpl.save(request);
         List<AirportSaveResponse> airportSaveResponseList = getAirportSaveResponseList(airportSaveResponse);
 
@@ -34,13 +35,7 @@ public class AirportController {
         return ResponseEntity.ok(response);
     }
 
-    private static List<AirportSaveResponse> getAirportSaveResponseList(AirportSaveResponse airportSaveResponse) {
-        List<AirportSaveResponse> airportSaveResponseList = new ArrayList<>();
-        airportSaveResponseList.add(airportSaveResponse);
-        return airportSaveResponseList;
-    }
-
-    @GetMapping("/search")
+    @GetMapping("/searchByLocation")
     public ResponseEntity<Object> findAirportsByLocationQuery(@RequestParam("location") String query) {
         var airportSaveResponseList = airportServiceImpl.searchAirportsByLocation(query);
         var response = BaseResponse.<AirportSaveResponse>builder().status(HttpStatus.OK.value()).isSuccess(true).dataList(airportSaveResponseList).build();
@@ -52,4 +47,9 @@ public class AirportController {
         airportServiceImpl.deleteById(id);
     }
 
+    private static List<AirportSaveResponse> getAirportSaveResponseList(AirportSaveResponse airportSaveResponse) {
+        List<AirportSaveResponse> airportSaveResponseList = new ArrayList<>();
+        airportSaveResponseList.add(airportSaveResponse);
+        return airportSaveResponseList;
+    }
 }

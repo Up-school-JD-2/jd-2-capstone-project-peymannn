@@ -11,5 +11,7 @@ public interface FlightService extends GenericService<FlightSaveRequest, FlightS
 
     List<FlightSaveResponse> searchFlightsByTwoAddress(String to, String from);
 
+    List<FlightSaveResponse> searchFlightsByTwoAddressAndAirlineCompany(String to, String from, Long id);
+
     Flight getReferenceById(Long id);
 }

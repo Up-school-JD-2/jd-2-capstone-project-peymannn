@@ -26,7 +26,7 @@ public class TicketController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/ticket")
+    @PostMapping()
     public ResponseEntity<Object> createTicket(@Valid @RequestBody TicketSaveRequest request) {
         var ticketSaveResponse = ticketServiceImpl.save(request);
         List<TicketSaveResponse> ticketSaveResponseList = getTicketSaveResponseList(ticketSaveResponse);
@@ -35,13 +35,7 @@ public class TicketController {
         return ResponseEntity.ok(response);
     }
 
-    private static List<TicketSaveResponse> getTicketSaveResponseList(TicketSaveResponse ticketSaveResponse) {
-        List<TicketSaveResponse> ticketSaveResponseList = new ArrayList<>();
-        ticketSaveResponseList.add(ticketSaveResponse);
-        return ticketSaveResponseList;
-    }
-
-    @GetMapping("/search")
+    @GetMapping("/searchByPassengerNameOrSurname")
     public ResponseEntity<Object> findTicketsByPassengerNameOrSurname(@RequestParam("nameOrSurname") String nameOrSurname) {
         var ticket = ticketServiceImpl.searchTicketsByPassengerNameOrSurname(nameOrSurname);
         var response = BaseResponse.<TicketSaveResponse>builder().status(HttpStatus.OK.value()).isSuccess(true).dataList(ticket).build();
@@ -67,5 +61,11 @@ public class TicketController {
     @DeleteMapping("/{id}")
     public void deleteTicket(@PathVariable("id") Long id) {
         ticketServiceImpl.deleteById(id);
+    }
+
+    private static List<TicketSaveResponse> getTicketSaveResponseList(TicketSaveResponse ticketSaveResponse) {
+        List<TicketSaveResponse> ticketSaveResponseList = new ArrayList<>();
+        ticketSaveResponseList.add(ticketSaveResponse);
+        return ticketSaveResponseList;
     }
 }
