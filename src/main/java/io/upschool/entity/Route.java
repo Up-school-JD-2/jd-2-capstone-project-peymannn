@@ -27,6 +27,6 @@ public class Route {
     private Airport destinationPlace;
 
     @Builder.Default
-    @Column(name = "is_active", columnDefinition="tinyint(1) default 1")
+    @Column(name = "is_active", columnDefinition = "tinyint(1) default 1")
     private Boolean isActive = true;
 }

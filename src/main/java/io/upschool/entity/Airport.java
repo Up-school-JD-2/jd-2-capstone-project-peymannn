@@ -22,13 +22,13 @@ public class Airport {
 
     @Column(nullable = false)
     @NotBlank(message = "airport name may not be blank")
-    private String airportName ;
+    private String airportName;
 
     @Column(nullable = false)
     @NotBlank(message = "address may not be blank")
-    private String address ;
+    private String address;
 
     @Builder.Default
-    @Column(name = "is_active", columnDefinition="tinyint(1) default 1")
+    @Column(name = "is_active", columnDefinition = "tinyint(1) default 1")
     private Boolean isActive = true;
 }

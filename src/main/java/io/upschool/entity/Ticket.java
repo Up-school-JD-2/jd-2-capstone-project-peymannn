@@ -29,7 +29,7 @@ public class Ticket {
     private Long id;
 
     @Builder.Default
-    private String ticketNumber  = UUID.randomUUID().toString();
+    private String ticketNumber = UUID.randomUUID().toString();
 
     @Column(nullable = false)
     @NotBlank(message = "passenger Name Surname may not be blank")
@@ -43,14 +43,14 @@ public class Ticket {
     @Column(nullable = false)
     @Size(min = AirlineSystemConstant.CARD_NUMBER_LENGTH, max = AirlineSystemConstant.CARD_NUMBER_LENGTH)
     @NotBlank(message = "Card Number may not be blank")
-    private String CardNumber ;
+    private String CardNumber;
 
     @Builder.Default
-    @Column(name = "is_active", columnDefinition="tinyint(1) default 1")
+    @Column(name = "is_active", columnDefinition = "tinyint(1) default 1")
     private Boolean isActive = true;
 
     @JoinColumn(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    private Flight flight ;
+    private Flight flight;
 
 }

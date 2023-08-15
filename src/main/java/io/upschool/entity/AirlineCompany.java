@@ -23,14 +23,14 @@ public class AirlineCompany {
 
     @Column(nullable = false)
     @NotBlank(message = "name may not be blank")
-    private String name ;
+    private String name;
 
     @Column(nullable = false)
     @NotBlank(message = "email may not be blank")
     @Email
-    private String email ;
+    private String email;
 
     @Builder.Default
-    @Column(name = "is_active", columnDefinition="tinyint(1) default 1")
+    @Column(name = "is_active", columnDefinition = "tinyint(1) default 1")
     private Boolean isActive = true;
 }
